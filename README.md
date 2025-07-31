@@ -26,6 +26,36 @@
 
 회의실 예약을 웹에서 할 수 있는 시스템의 백엔드 API입니다. WebSocket을 통해 실시간으로 예약 상태가 반영되도록 구현되었습니다.
 
+## 🚀 Railway 배포
+
+이 프로젝트는 Railway에서 쉽게 배포할 수 있도록 설정되어 있습니다.
+
+### Railway 배포 단계
+
+1. **Railway 계정 생성 및 로그인**
+   - [Railway](https://railway.app)에 가입하고 로그인합니다.
+
+2. **GitHub 저장소 연결**
+   - Railway 대시보드에서 "New Project" → "Deploy from GitHub repo" 선택
+   - 이 저장소를 연결합니다.
+
+3. **환경 변수 설정**
+   Railway 대시보드의 Variables 탭에서 다음 환경 변수들을 설정하세요:
+
+   ```
+   NODE_ENV=production
+   JWT_SECRET=your-secure-jwt-secret-key
+   JWT_EXPIRES_IN=24h
+   CORS_ORIGIN=https://your-frontend-domain.com
+   ```
+
+4. **배포 확인**
+   - 배포가 완료되면 Railway에서 제공하는 도메인으로 API에 접근할 수 있습니다.
+
+### 데이터베이스
+
+이 프로젝트는 SQLite를 사용합니다. Railway에서는 `/tmp` 디렉토리에 데이터베이스 파일이 생성됩니다.
+
 ## 주요 기능
 
 - ✅ 로그인 (사원번호 기반)

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -16,11 +16,18 @@ import { Booking } from './bookings/entities/booking.entity';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'meeting-room-booking.db',
-      entities: [User, MeetingRoom, Booking],
-      synchronize: true, // 개발 환경에서만 사용
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'sqlite',
+        database:
+          configService.get('NODE_ENV') === 'production'
+            ? '/tmp/meeting-room-booking.db'
+            : 'meeting-room-booking.db',
+        entities: [User, MeetingRoom, Booking],
+        synchronize: true,
+      }),
+      inject: [ConfigService],
     }),
     AuthModule,
     MeetingRoomsModule,
