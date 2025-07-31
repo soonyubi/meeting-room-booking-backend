@@ -22,40 +22,131 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+# 회의실 예약 시스템 백엔드
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+회의실 예약을 웹에서 할 수 있는 시스템의 백엔드 API입니다. WebSocket을 통해 실시간으로 예약 상태가 반영되도록 구현되었습니다.
 
-## Project setup
+## 주요 기능
+
+- ✅ 로그인 (사원번호 기반)
+- ✅ 회의실 목록 조회
+- ✅ 회의실 예약 및 관리
+- ✅ 실시간 WebSocket 통신
+- ✅ 예약 충돌 검사
+
+## 기술 스택
+
+- **Framework**: NestJS
+- **Database**: SQLite (TypeORM)
+- **WebSocket**: Socket.io
+- **Validation**: class-validator, class-transformer
+- **Authentication**: bcryptjs
+
+## 설치 및 실행
+
+### 1. 의존성 설치
 
 ```bash
-$ yarn install
+yarn install
 ```
 
-## Compile and run the project
+### 2. 개발 서버 실행
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+yarn start:dev
 ```
 
-## Run tests
+서버는 `http://localhost:3000`에서 실행됩니다.
+
+### 3. 시드 데이터 실행 (선택사항)
 
 ```bash
-# unit tests
-$ yarn run test
+yarn seed
+```
 
-# e2e tests
-$ yarn run test:e2e
+**참고**: 개발 환경에서는 서버 시작 시 자동으로 시드 데이터가 생성됩니다. 데이터베이스에 이미 데이터가 있으면 건너뜁니다.
 
-# test coverage
-$ yarn run test:cov
+## API 엔드포인트
+
+### 인증
+
+- `POST /auth/login` - 로그인
+
+### 회의실
+
+- `GET /meeting-rooms` - 회의실 목록 조회
+- `GET /meeting-rooms/:id` - 특정 회의실 조회
+- `GET /meeting-rooms/:id/status?date=YYYY-MM-DD` - 회의실 상태 조회
+
+### 예약
+
+- `GET /bookings` - 예약 목록 조회
+- `POST /bookings` - 예약 생성
+- `GET /bookings/:id` - 특정 예약 조회
+- `DELETE /bookings/:id` - 예약 삭제
+- `GET /bookings/meeting-room/:meetingRoomId?date=YYYY-MM-DD` - 특정 회의실의 예약 조회
+
+## WebSocket 이벤트
+
+### 클라이언트 → 서버
+
+- `join-room` - 회의실 방 참여
+- `leave-room` - 회의실 방 나가기
+
+### 서버 → 클라이언트
+
+- `booking-created` - 새 예약 생성 알림
+- `booking-deleted` - 예약 삭제 알림
+
+## 시드 데이터
+
+시스템 시작 시 자동으로 다음 데이터가 생성됩니다:
+
+### 사용자
+
+- 사원번호: EMP001, 이름: 김철수, 비밀번호: password123
+- 사원번호: EMP002, 이름: 이영희, 비밀번호: password123
+- 사원번호: EMP003, 이름: 박민수, 비밀번호: password123
+
+### 회의실
+
+- 1회의실(화상) - 8석
+- 2회의실 - 12석
+- 3회의실(화상) - 10석
+- 4회의실 - 6석
+- 5회의실(대회의실) - 20석
+
+## 예약 생성 예시
+
+```json
+{
+  "date": "2024-01-15",
+  "meetingRoomId": 1,
+  "startTime": "09:00",
+  "endTime": "10:00",
+  "title": "팀 미팅"
+}
+```
+
+## WebSocket 연결 예시
+
+```javascript
+import { io } from 'socket.io-client';
+
+const socket = io('http://localhost:3000');
+
+// 회의실 방 참여
+socket.emit('join-room', '1');
+
+// 예약 생성 알림 수신
+socket.on('booking-created', (data) => {
+  console.log('새 예약:', data);
+});
+
+// 예약 삭제 알림 수신
+socket.on('booking-deleted', (data) => {
+  console.log('예약 삭제:', data);
+});
 ```
 
 ## Resources
