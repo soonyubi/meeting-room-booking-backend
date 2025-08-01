@@ -21,11 +21,9 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // 개발 환경에서만 시드 데이터 실행
-  if (process.env.NODE_ENV === 'development') {
-    const seedService = app.get(SeedService);
-    await seedService.seed();
-  }
+  // 시드 데이터 실행 (개발 및 프로덕션 환경)
+  const seedService = app.get(SeedService);
+  await seedService.seed();
 
   const port = process.env.PORT || 3000;
   await app.listen(port, '0.0.0.0');

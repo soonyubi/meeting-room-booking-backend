@@ -26,6 +26,8 @@ import { Booking } from './bookings/entities/booking.entity';
             : 'meeting-room-booking.db',
         entities: [User, MeetingRoom, Booking],
         synchronize: true,
+        logging: false,
+        dropSchema: false,
       }),
       inject: [ConfigService],
     }),
