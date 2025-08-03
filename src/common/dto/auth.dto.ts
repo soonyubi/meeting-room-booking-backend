@@ -4,10 +4,6 @@ export class LoginDto {
   @IsString()
   @IsNotEmpty()
   employeeNumber: string;
-
-  @IsString()
-  @IsNotEmpty()
-  password: string;
 }
 
 export class LoginResponseDto {

@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { MeetingRoom } from '../entities/meeting-room.entity';
-import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class SeedService {
@@ -26,22 +25,22 @@ export class SeedService {
 
     console.log('시드 데이터를 생성합니다...');
 
-    // 사용자 시드 데이터
+    // 사용자 시드 데이터 (비밀번호 없이)
     const users = [
       {
-        employeeNumber: 'EMP001',
+        employeeNumber: 'GP001',
+        name: '홍길동',
+        password: '', // 빈 문자열로 설정
+      },
+      {
+        employeeNumber: 'BP001',
         name: '김철수',
-        password: await bcrypt.hash('password123', 10),
+        password: '',
       },
       {
-        employeeNumber: 'EMP002',
+        employeeNumber: 'IT001',
         name: '이영희',
-        password: await bcrypt.hash('password123', 10),
-      },
-      {
-        employeeNumber: 'EMP003',
-        name: '박민수',
-        password: await bcrypt.hash('password123', 10),
+        password: '',
       },
     ];
 
