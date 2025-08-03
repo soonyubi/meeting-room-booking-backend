@@ -73,12 +73,18 @@ export class BookingsService {
     });
   }
 
-  async findByMeetingRoom(meetingRoomId: number, date: string) {
+  async findByMeetingRoom(meetingRoomId: number, date?: string) {
+    const whereCondition: any = {
+      meetingRoomId,
+    };
+
+    // 날짜가 제공된 경우에만 날짜 필터 추가
+    if (date) {
+      whereCondition.date = new Date(date);
+    }
+
     return this.bookingRepository.find({
-      where: {
-        meetingRoomId,
-        date: new Date(date),
-      },
+      where: whereCondition,
       relations: ['user'],
       order: { startTime: 'ASC' },
     });

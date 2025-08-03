@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Request,
+  Query,
 } from '@nestjs/common';
 import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
@@ -34,9 +35,8 @@ export class BookingsController {
   @Get('meeting-room/:meetingRoomId')
   findByMeetingRoom(
     @Param('meetingRoomId') meetingRoomId: string,
-    @Request() req,
+    @Query('date') date: string,
   ) {
-    const date = req.query.date || new Date().toISOString().split('T')[0];
     return this.bookingsService.findByMeetingRoom(+meetingRoomId, date);
   }
 
